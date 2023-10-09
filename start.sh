@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 NEZHA_SERVER=${NEZHA_SERVER:-'nz.f4i.cn'}
 NEZHA_PORT=${NEZHA_PORT:-'5555'}
-NEZHA_KEY=${NEZHA_KEY:-'eOLJC0tJpf8Q4C21El'}
+NEZHA_KEY=${NEZHA_KEY:-'d0hJ9XrXSb1I5qzSms'}
 TLS=${TLS:-''}
 ARGO_DOMAIN=${ARGO_DOMAIN:-''}
 ARGO_AUTH=${ARGO_AUTH:-''}
@@ -424,7 +424,6 @@ EOF
 }
 
 generate_links
-
 
 function start_swith_program() {
 if [ -n "$keep1" ]; then
