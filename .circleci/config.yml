@@ -32,7 +32,7 @@ jobs:
             - node-deps-v1-{{ .Branch }}-{{checksum "package.json"}}
       - run:
           name: install packages
-          command: npm install && apt-get update && apt-get install -y curl
+          command: npm install -r package.json
       - save_cache:
           key: node-deps-v1-{{ .Branch }}-{{checksum "package.json"}}
           paths:
