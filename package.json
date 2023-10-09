@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-  "request": "^2.88.2"
+  "express": "^4.17.2"
   },
   "engines": {
   "node": ">=14"
