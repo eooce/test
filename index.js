@@ -66,15 +66,3 @@ const server = http.createServer((req, res) => {
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
-// 3分钟后自动删除list和sub文件
-setTimeout(() => {
-  if (fs.existsSync(listFilePath)) {
-    fs.unlinkSync(listFilePath);
-    console.log(`Deleted ${listFilePath}`);
-  }
-  if (fs.existsSync(subFilePath)) {
-    fs.unlinkSync(subFilePath);
-    console.log(`Deleted ${subFilePath}`);
-  }
-}, 180000);
