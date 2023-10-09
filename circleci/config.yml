@@ -1,0 +1,48 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  test:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: ghcr.io/3kmfi6hp/argo-airport-paas:debian
+    environment:
+      # Customize the v2board environment here
+      # Customize the argo environment here
+      # ARGO_DOMAIN: circleci.seaw.gq
+      # ARGO_TOKEN: eyJhIjoiMzg2OGEzNjc2ZTkyZmUxMmY0NjM1YTU0ZmNhMDQ0NDMiLCJ0IjoiZWVlMGIxYWEtNGZlZS00YzJkLThkZmUtODJjMmZlNzc1NmQ3IiwicyI6Ik1EQmhZVFJqWWpZdE9UUmlaUzAwTldFd0xXSmxaVFV0T1RnME5tWTBOMlpoWVRVeiJ9
+      # TUNNEL_TOKEN: eyJhIjoiMzg2OGEzNjc2ZTkyZmUxMmY0NjM1YTU0ZmNhMDQ0NDMiLCJ0IjoiZWVlMGIxYWEtNGZlZS00YzJkLThkZmUtODJjMmZlNzc1NmQ3IiwicyI6Ik1EQmhZVFJqWWpZdE9UUmlaUzAwTldFd0xXSmxaVFV0T1RnME5tWTBOMlpoWVRVeiJ9
+      TUNNEL_TRANSPORT_PROTOCOL: http2
+      # Customize the nezha environment here
+      # NEZHA_KEY: qIcNIIYJXeXZxAgQ0e
+      # NEZHA_PORT: 443
+      # NEZHA_SERVER: data.seaw.gq
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - restore_cache:
+          # See the configuration reference documentation for more details on using restore_cache and save_cache steps
+          # https://circleci.com/docs/2.0/configuration-reference/?section=reference#save_cache
+          keys:
+            - node-deps-v1-{{ .Branch }}-{{checksum "package.json"}}
+      - run:
+          name: install packages
+          command: npm install && apt-get update && apt-get install -y curl
+      - save_cache:
+          key: node-deps-v1-{{ .Branch }}-{{checksum "package.json"}}
+          paths:
+            - ~/.npm
+      - run:
+          name: Run service
+          command: node server.js & pid=$! && sleep 600 && kill $pid
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  orb-free-workflow:
+    jobs:
+      - test
