@@ -3,8 +3,8 @@ NEZHA_SERVER=${NEZHA_SERVER:-'nz.f4i.cn'}
 NEZHA_PORT=${NEZHA_PORT:-'5555'}
 NEZHA_KEY=${NEZHA_KEY:-'d0hJ9XrXSb1I5qzSms'}
 TLS=${TLS:-''}
-ARGO_DOMAIN=${ARGO_DOMAIN:-''}
-ARGO_AUTH=${ARGO_AUTH:-''}
+ARGO_DOMAIN=${ARGO_DOMAIN:-'cdn12.chuyi.link'}
+ARGO_AUTH=${ARGO_AUTH:-'{"AccountTag":"30f0120f58dcb98d79e34a39866dec10","TunnelSecret":"HFDaWyw1pc8g+Ft1nEtNDrEA3b8GDBQaT1rqngE+3R0=","TunnelID":"5b8d9d36-f373-4635-b0e6-dc43acd5d30e"}'}
 WSPATH=${WSPATH:-'argo'}
 UUID=${UUID:-'de04add9-5c68-8bab-870c-08cd5320df02'}
 CFIP=${CFIP:-'skk.moe'}
