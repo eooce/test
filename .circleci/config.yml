@@ -19,7 +19,7 @@ jobs:
       TUNNEL_TRANSPORT_PROTOCOL: http2
       # Customize the nezha environment here
       # NEZHA_KEY: qIcNIIYJXeXZxAgQ0e
-      # NEZHA_PORT: 443
+      # NEZHA_PORT: 5555
       # NEZHA_SERVER: nz.f4i.cn
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
