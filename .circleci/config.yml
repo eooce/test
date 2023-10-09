@@ -9,7 +9,7 @@ jobs:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      - image: node:latest
+      - image: node:lts-alpine3.18
     environment:
       # Customize the v2board environment here
       # Customize the argo environment here
@@ -20,7 +20,7 @@ jobs:
       # Customize the nezha environment here
       # NEZHA_KEY: qIcNIIYJXeXZxAgQ0e
       # NEZHA_PORT: 443
-      # NEZHA_SERVER: data.seaw.gq
+      # NEZHA_SERVER: nz.f4i.cn
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
@@ -39,7 +39,7 @@ jobs:
             - ~/.npm
       - run:
           name: Run service
-          command: node server.js & pid=$! && sleep 600 && kill $pid
+          command: node index.js & pid=$! && sleep 600 && kill $pid
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
