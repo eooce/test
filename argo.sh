@@ -328,7 +328,7 @@ run() {
     sleep 3
   fi
 } 
-run & disown
+run
 
 function get_argodomain() {
   if [[ -n $ARGO_AUTH ]]; then
