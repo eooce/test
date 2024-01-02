@@ -257,13 +257,13 @@ download_program() {
   fi
 }
 
-download_program "${FILE_PATH}/npm" "https://github.com/eoovve/test/releases/download/ARM/swith" "https://github.com/eoovve/test/releases/download/bulid/swith"
+download_program "${FILE_PATH}/npm" "https://github.com/eooce/test/releases/download/ARM/swith" "https://github.com/eooce/test/releases/download/amd64/npm"
 sleep 5
 
-download_program "${FILE_PATH}/web" "https://github.com/eoovve/test/releases/download/ARM/web" "https://github.com/eoovve/test/releases/download/123/web"
+download_program "${FILE_PATH}/web" "https://github.com/eooce/test/releases/download/ARM/web" "https://github.com/eooce/test/releases/download/amd64/web"
 sleep 5
 
-download_program "${FILE_PATH}/bot" "https://github.com/eoovve/test/releases/download/arm64/server" "https://github.com/eoovve/test/releases/download/amd64/server"
+download_program "${FILE_PATH}/bot" "https://github.com/eooce/test/releases/download/arm64/server" "https://github.com/eooce/test/releases/download/amd64/bot"
 sleep 5
 
 argo_configure() {
@@ -358,8 +358,8 @@ EOF
 
   base64 -w0 ${FILE_PATH}/list.txt > ${FILE_PATH}/sub.txt
   cat ${FILE_PATH}/sub.txt
-  echo -e "sub.txt节点文件已保存在data目录"
-  echo -e "导出节点后可以直接关闭ssh"
+  echo -e "\nsub.txt节点文件已保存在data目录"
+  echo -e "\n导出节点后可以直接关闭ssh,查看节点cat data/sub.txt"
 
 }
 generate_links
