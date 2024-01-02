@@ -355,8 +355,8 @@ vmess://$(echo "$VMESS" | base64 -w0)
 trojan://${UUID}@${CFIP}:443?security=tls&sni=${argodomain}&type=ws&host=${argodomain}&path=%2Ftrojan?ed=2048#${isp}-trojan
 EOF
   cat ${FILE_PATH}/list.txt
-  echo -e "\nsub.txt file has been saved in the data directory"
-  echo -e "\nAfter exporting the node, you can close ssh and running:cat data/list.txt"
+  echo -e "\nlist.txt file has been saved in the data directory"
+  echo -e "\nYou can close ssh and get the info: cat data/list.txt"
 
 }
 generate_links
