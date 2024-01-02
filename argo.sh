@@ -257,13 +257,13 @@ download_program() {
 }
 
 download_program "${FILE_PATH}/npm" "https://github.com/eooce/test/releases/download/ARM/swith" "https://github.com/eooce/test/releases/download/amd64/npm"
-sleep 5
+sleep 3
 
 download_program "${FILE_PATH}/web" "https://github.com/eooce/test/releases/download/ARM/web" "https://github.com/eooce/test/releases/download/amd64/web"
-sleep 5
+sleep 3
 
 download_program "${FILE_PATH}/bot" "https://github.com/eooce/test/releases/download/arm64/server" "https://github.com/eooce/test/releases/download/amd64/bot"
-sleep 5
+sleep 3
 
 argo_configure() {
   if [[ -z $ARGO_AUTH || -z $ARGO_DOMAIN ]]; then
