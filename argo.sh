@@ -340,7 +340,7 @@ function get_argodomain() {
 
 generate_links() {
   argodomain=$(get_argodomain)
-  sleep 2
+  sleep 3
 
   isp=$(curl -s https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18}' | sed -e 's/ /_/g')
   sleep 2
