@@ -1,12 +1,11 @@
 #!/bin/bash
 export UUID=${UUID:-'0afd527c-17f6-4238-b447-792b58eb648s'}
 export NEZHA_SERVER=${NEZHA_SERVER:-''}
-export NEZHA_PORT=${NEZHA_PORT:-'5555'}  
+export NEZHA_PORT=${NEZHA_PORT:-''}  
 export NEZHA_KEY=${NEZHA_KEY:-''}
 export ARGO_DOMAIN=${ARGO_DOMAIN:-''}  
 export ARGO_AUTH=${ARGO_AUTH:-''}
 export CFIP=${CFIP:-'cf1.eryayun.tk'}
-export NAME=${NAME:-'Wang'}
 export FILE_PATH=${FILE_PATH:-'./data'}
 export ARGO_PORT=${ARGO_PORT:-'8001'}  
 
@@ -346,14 +345,14 @@ generate_links() {
   isp=$(curl -s https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18}' | sed -e 's/ /_/g')
   sleep 2
 
-  VMESS="{ \"v\": \"2\", \"ps\": \"${NAME}-${isp}\", \"add\": \"${CFIP}\", \"port\": \"443\", \"id\": \"${UUID}\", \"aid\": \"0\", \"scy\": \"none\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"${argodomain}\", \"path\": \"/vmess?ed=2048\", \"tls\": \"tls\", \"sni\": \"${argodomain}\", \"alpn\": \"\" }"
+  VMESS="{ \"v\": \"2\", \"ps\": \"${isp}-vmess\", \"add\": \"${CFIP}\", \"port\": \"443\", \"id\": \"${UUID}\", \"aid\": \"0\", \"scy\": \"none\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"${argodomain}\", \"path\": \"/vmess?ed=2048\", \"tls\": \"tls\", \"sni\": \"${argodomain}\", \"alpn\": \"\" }"
 
   cat > ${FILE_PATH}/list.txt <<EOF
-vless://${UUID}@${CFIP}:443?encryption=none&security=tls&sni=${argodomain}&type=ws&host=${argodomain}&path=%2Fvless?ed=2048#${NAME}-${isp}
+vless://${UUID}@${CFIP}:443?encryption=none&security=tls&sni=${argodomain}&type=ws&host=${argodomain}&path=%2Fvless?ed=2048#${isp}-vless
 
 vmess://$(echo "$VMESS" | base64 -w0)
 
-trojan://${UUID}@${CFIP}:443?security=tls&sni=${argodomain}&type=ws&host=${argodomain}&path=%2Ftrojan?ed=2048#${NAME}-${isp}
+trojan://${UUID}@${CFIP}:443?security=tls&sni=${argodomain}&type=ws&host=${argodomain}&path=%2Ftrojan?ed=2048#${isp}-trojan
 EOF
 
   base64 -w0 ${FILE_PATH}/list.txt > ${FILE_PATH}/sub.txt
