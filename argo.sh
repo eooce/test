@@ -5,9 +5,9 @@ export NEZHA_PORT=${NEZHA_PORT:-''}
 export NEZHA_KEY=${NEZHA_KEY:-''}
 export ARGO_DOMAIN=${ARGO_DOMAIN:-''}  
 export ARGO_AUTH=${ARGO_AUTH:-''}
-export CFIP=${CFIP:-'cf1.eryayun.tk'}
+export CFIP=${CFIP:-'skk.moe'}
 export FILE_PATH=${FILE_PATH:-'./data'}
-export ARGO_PORT=${ARGO_PORT:-'8001'}  
+export ARGO_PORT=${ARGO_PORT:-'8080'}  
 
 if [ ! -d "${FILE_PATH}" ]; then
     mkdir ${FILE_PATH}
