@@ -354,11 +354,9 @@ vmess://$(echo "$VMESS" | base64 -w0)
 
 trojan://${UUID}@${CFIP}:443?security=tls&sni=${argodomain}&type=ws&host=${argodomain}&path=%2Ftrojan?ed=2048#${isp}-trojan
 EOF
-
-  base64 -w0 ${FILE_PATH}/list.txt > ${FILE_PATH}/sub.txt
-  cat ${FILE_PATH}/sub.txt
-  echo -e "\nsub.txt节点文件已保存在data目录"
-  echo -e "\n导出节点后可以直接关闭ssh,查看节点cat data/sub.txt"
+  cat ${FILE_PATH}/list.txt
+  echo -e "\nsub.txt file has been saved in the data directory"
+  echo -e "\nAfter exporting the node, you can close ssh and running:cat data/list.txt"
 
 }
 generate_links
