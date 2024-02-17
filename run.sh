@@ -278,7 +278,7 @@ function get_argo_domain() {
   fi
 }
 
-isp=$(curl -s https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18"-"$30}' | sed -e 's/ /_/g')
+isp=$(curl -s https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18}' | sed -e 's/ /_/g')
 sleep 2
 
 generate_links() {
