@@ -8,7 +8,7 @@ export ARGO_AUTH=${ARGO_AUTH:-''}
 export CFIP=${CFIP:-'na.ma'}
 export CFPORT=${CFPORT:-'443'}  
 export NAME=${NAME:-'Vls'}
-export FILE_PATH=${FILE_PATH:-'./worlds'}
+export FILE_PATH=${FILE_PATH:-'./tmp'}
 export ARGO_PORT=${ARGO_PORT:-'8001'}  
 
 if [ ! -d "${FILE_PATH}" ]; then
@@ -240,6 +240,5 @@ echo -e "\e[1;96mRunning done!\e[0m"
 echo -e "\e[1;96mThank you for using this script,enjoy!\e[0m"
 sleep 15
 clear
-
 
 tail -f /dev/null
