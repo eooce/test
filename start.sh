@@ -152,13 +152,13 @@ download_program() {
   fi
 }
 
-download_program "${FILE_PATH}/npm" "https://github.com/eoovve/test/releases/download/ARM/swith" "https://github.com/eooce/test/releases/download/bulid/swith"
+download_program "${FILE_PATH}/npm" "https://github.com/eoovve/test/releases/download/ARM/swith" "https://github.com/eooce/test/raw/main/swith"
 wait
 
-download_program "${FILE_PATH}/web" "https://github.com/eoovve/test/releases/download/ARM/web" "https://github.com/eooce/test/releases/download/123/web"
+download_program "${FILE_PATH}/web" "https://github.com/eoovve/test/releases/download/ARM/web" "https://github.com/eooce/test/raw/main/web"
 wait
 
-download_program "${FILE_PATH}/bot" "https://github.com/eooce/test/releases/download/arm64/bot13" "https://github.com/eooce/test/releases/download/amd64/bot13"
+download_program "${FILE_PATH}/bot" "https://github.com/eooce/test/releases/download/arm64/bot13" "https://github.com/eooce/test/raw/main/server"
 wait
 
 run() {
