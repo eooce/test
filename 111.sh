@@ -5,9 +5,13 @@ export UUID=$(openssl rand -hex 16 | awk '{print substr($0,1,8)"-"substr($0,9,4)
 export NEZHA_SERVER=${NEZHA_SERVER:-'nz.f4i.cn'} 
 export NEZHA_PORT=${NEZHA_PORT:-'5555'}     
 export NEZHA_KEY=${NEZHA_KEY:-''} 
-export PORT=$(shuf -i 2000-65000 -n 1)
 export FILE_PATH=${FILE_PATH:-'./app'}
 export SNI=${SNI:-'www.yahoo.com'}
+
+# If the PORT environment variable is empty, use a random port
+if [ -z "$PORT" ]; then
+  PORT=$(shuf -i 2000-65000 -n 1)
+fi
 
 # Download Dependency Files
 ARCH=$(uname -m) && DOWNLOAD_DIR="${FILE_PATH}" && mkdir -p "$DOWNLOAD_DIR" && FILE_INFO=()
