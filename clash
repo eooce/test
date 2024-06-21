@@ -45,7 +45,7 @@ proxy-providers:
   frankfurt:
     <<: *p
     type: http
-    url: http://209.250.238.182:51882/5706c6c7-25e1-4c41-889a-866e64bae538/proxies
+    url: 
 
 proxies:
 
