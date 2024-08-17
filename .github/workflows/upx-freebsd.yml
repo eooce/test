@@ -18,18 +18,26 @@ jobs:
       run: |
         wget https://github.com/eooce/test/releases/download/freebsd/server -O server
 
-    - name: Check file type
-      run: |
-        file server
-
-    - name: Install UPX
+    - name: Set up FreeBSD environment with QEMU
       run: |
         sudo apt-get update
-        sudo apt-get install -y upx
+        sudo apt-get install -y qemu-system-x86 qemu-utils
+        wget https://download.freebsd.org/ftp/releases/VM-IMAGES/13.1-RELEASE/amd64/Latest/FreeBSD-13.1-RELEASE-amd64.raw.xz
+        unxz FreeBSD-13.1-RELEASE-amd64.raw.xz
+        qemu-img resize FreeBSD-13.1-RELEASE-amd64.raw +5G
+        sudo modprobe nbd max_part=8
+        sudo qemu-nbd --connect=/dev/nbd0 FreeBSD-13.1-RELEASE-amd64.raw
+        sudo mount /dev/nbd0p2 /mnt
+        sudo mkdir -p /mnt/workspace
+        sudo cp server /mnt/workspace/
 
-    - name: Compress binary with UPX
+    - name: Compress binary with UPX in FreeBSD
       run: |
-        upx --best --lzma -o server_compressed server
+        sudo chroot /mnt /bin/sh -c "pkg install -y upx && cd /workspace && upx --best --lzma -o server_compressed server"
+
+    - name: Copy compressed binary back to host
+      run: |
+        sudo cp /mnt/workspace/server_compressed .
 
     - name: Set up GitHub CLI with PAT
       run: |
@@ -39,7 +47,5 @@ jobs:
 
     - name: Upload compressed binary to GitHub Releases
       run: |
-        # Create the release if it doesn't exist, otherwise it will fail
         gh release create freebsd -t "FreeBSD Release" -n "Compressed FreeBSD binary" || true
-        # Upload the compressed binary to the release
         gh release upload freebsd server_compressed --clobber
