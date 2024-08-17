@@ -1,0 +1,40 @@
+name: Compress and Upload FreeBSD Binary
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Download FreeBSD binary
+      run: |
+        wget https://github.com/eooce/test/releases/download/freebsd/server -O server
+
+    - name: Install UPX
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y upx
+
+    - name: Compress FreeBSD binary with UPX
+      run: |
+        upx --best --lzma -o server_compressed server
+
+    - name: Set up GitHub CLI
+      run: |
+        sudo apt-get install -y gh
+        echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+    - name: Upload compressed binary to GitHub Releases
+      run: |
+        # Create a release if it doesn't exist, otherwise it will fail
+        gh release create freebsd -t "FreeBSD Release" -n "Compressed FreeBSD binary" || true
+        # Upload the compressed binary to the release
+        gh release upload freebsd server_compressed --clobber
