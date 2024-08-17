@@ -1,4 +1,4 @@
-name: Compress and Upload FreeBSD Binary
+name: Compress and Upload Binary with UPX
 
 on:
   push:
@@ -11,32 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Download FreeBSD binary
+    - name: Download binary file
       run: |
-        wget https://download.freebsd.org/ftp/releases/VM-IMAGES/13.3-RELEASE/amd64/Latest/FreeBSD-13.3-RELEASE-amd64.raw.xz -O FreeBSD.raw.xz
+        wget https://github.com/eooce/test/releases/download/freebsd/server -O server
 
-    - name: Set up FreeBSD environment with QEMU
+    - name: Install UPX
       run: |
         sudo apt-get update
-        sudo apt-get install -y qemu-system-x86 qemu-utils
-        unxz FreeBSD.raw.xz
-        qemu-img resize -f raw FreeBSD.raw +5G
-        sudo modprobe nbd max_part=8
-        sudo qemu-nbd --format=raw --connect=/dev/nbd0 FreeBSD.raw
-        sudo mount /dev/nbd0p2 /mnt
-        sudo mkdir -p /mnt/workspace
-        sudo cp server /mnt/workspace/
+        sudo apt-get install -y upx
 
-    - name: Compress binary with UPX in FreeBSD
+    - name: Compress binary with UPX
       run: |
-        sudo chroot /mnt /bin/sh -c "pkg install -y upx && cd /workspace && upx --best --lzma -o server_compressed server"
-
-    - name: Copy compressed binary back to host
-      run: |
-        sudo cp /mnt/workspace/server_compressed .
+        upx --best --lzma -o server_compressed server
 
     - name: Set up GitHub CLI with PAT
       run: |
