@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  compress-and-upload:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,23 +18,23 @@ jobs:
       run: |
         wget https://github.com/eooce/test/releases/download/freebsd/server -O server
 
-    - name: Install UPX
+    - name: Check file type
       run: |
-        sudo apt-get update
-        sudo apt-get install -y upx
+        file server
 
-    - name: Compress FreeBSD binary with UPX
+    - name: Compress binary with gzip
       run: |
-        upx --best --lzma -o server_compressed server
+        gzip -9 -c server > server_compressed.gz
 
     - name: Set up GitHub CLI
       run: |
+        sudo apt-get update
         sudo apt-get install -y gh
         echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
     - name: Upload compressed binary to GitHub Releases
       run: |
-        # Create a release if it doesn't exist, otherwise it will fail
+        # Create the release if it doesn't exist, otherwise it will fail
         gh release create freebsd -t "FreeBSD Release" -n "Compressed FreeBSD binary" || true
         # Upload the compressed binary to the release
-        gh release upload freebsd server_compressed --clobber
+        gh release upload freebsd server_compressed.gz --clobber
