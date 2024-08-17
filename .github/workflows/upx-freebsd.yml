@@ -22,19 +22,24 @@ jobs:
       run: |
         file server
 
-    - name: Compress binary with gzip
+    - name: Install UPX
       run: |
-        gzip -9 -c server > server_compressed.gz
+        sudo apt-get update
+        sudo apt-get install -y upx
 
-    - name: Set up GitHub CLI
+    - name: Compress binary with UPX
+      run: |
+        upx --best --lzma -o server_compressed server
+
+    - name: Set up GitHub CLI with PAT
       run: |
         sudo apt-get update
         sudo apt-get install -y gh
-        echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+        echo "${{ secrets.PAT_TOKEN }}" | gh auth login --with-token
 
     - name: Upload compressed binary to GitHub Releases
       run: |
         # Create the release if it doesn't exist, otherwise it will fail
         gh release create freebsd -t "FreeBSD Release" -n "Compressed FreeBSD binary" || true
         # Upload the compressed binary to the release
-        gh release upload freebsd server_compressed.gz --clobber
+        gh release upload freebsd server_compressed --clobber
