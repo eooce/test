@@ -23,9 +23,9 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y qemu-system-x86 qemu-utils
         unxz FreeBSD.raw.xz
-        qemu-img resize FreeBSD.raw +5G
+        qemu-img resize -f raw FreeBSD.raw +5G
         sudo modprobe nbd max_part=8
-        sudo qemu-nbd --connect=/dev/nbd0 FreeBSD.raw
+        sudo qemu-nbd --format=raw --connect=/dev/nbd0 FreeBSD.raw
         sudo mount /dev/nbd0p2 /mnt
         sudo mkdir -p /mnt/workspace
         sudo cp server /mnt/workspace/
