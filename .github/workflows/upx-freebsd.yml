@@ -16,17 +16,16 @@ jobs:
 
     - name: Download FreeBSD binary
       run: |
-        wget https://github.com/eooce/test/releases/download/freebsd/server -O server
+        wget https://download.freebsd.org/ftp/releases/VM-IMAGES/13.3-RELEASE/amd64/Latest/FreeBSD-13.3-RELEASE-amd64.raw.xz -O FreeBSD.raw.xz
 
     - name: Set up FreeBSD environment with QEMU
       run: |
         sudo apt-get update
         sudo apt-get install -y qemu-system-x86 qemu-utils
-        wget https://download.freebsd.org/ftp/releases/VM-IMAGES/13.1-RELEASE/amd64/Latest/FreeBSD-13.1-RELEASE-amd64.raw.xz
-        unxz FreeBSD-13.1-RELEASE-amd64.raw.xz
-        qemu-img resize FreeBSD-13.1-RELEASE-amd64.raw +5G
+        unxz FreeBSD.raw.xz
+        qemu-img resize FreeBSD.raw +5G
         sudo modprobe nbd max_part=8
-        sudo qemu-nbd --connect=/dev/nbd0 FreeBSD-13.1-RELEASE-amd64.raw
+        sudo qemu-nbd --connect=/dev/nbd0 FreeBSD.raw
         sudo mount /dev/nbd0p2 /mnt
         sudo mkdir -p /mnt/workspace
         sudo cp server /mnt/workspace/
