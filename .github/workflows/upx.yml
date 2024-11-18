@@ -1,0 +1,151 @@
+name: upx and upload
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # 每周日0点运行
+  workflow_dispatch:     
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: 检查代码
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: 安装 UPX
+        run: sudo apt-get update && sudo apt-get install -y upx-ucl
+      
+      - name: 获取最新版本号
+        id: get_version
+        run: |
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/nezhahq/agent/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
+          echo "version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+          echo "获取到的版本号: $LATEST_VERSION"
+
+      - name: 下载并解压 AMD64 版本
+        run: |
+          rm -rf amd64
+          mkdir -p amd64
+          cd amd64
+          
+          # Nezha Agent AMD64
+          wget https://github.com/nezhahq/agent/releases/download/${{ steps.get_version.outputs.version }}/nezha-agent_linux_amd64.zip
+          unzip -o nezha-agent_linux_amd64.zip
+          
+          # Xray AMD64
+          wget https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
+          unzip -o Xray-linux-64.zip xray
+          
+          # Cloudflared AMD64
+          wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O cloudflared
+          chmod +x cloudflared
+          
+          # Sing-box AMD64
+          wget https://github.com/SagerNet/sing-box/releases/latest/download/sing-box-1.10.1-linux-amd64.tar.gz
+          tar xzf sing-box-1.10.1-linux-amd64.tar.gz
+          mv sing-box-*/sing-box ./sing-box
+          chmod +x sing-box
+          
+          echo "AMD64 文件列表："
+          ls -lh
+          cd ..
+      
+      - name: 下载并解压 ARM64 版本
+        run: |
+          rm -rf arm64
+          mkdir -p arm64
+          cd arm64
+          
+          # Nezha Agent ARM64
+          wget https://github.com/nezhahq/agent/releases/download/${{ steps.get_version.outputs.version }}/nezha-agent_linux_arm64.zip
+          unzip -o nezha-agent_linux_arm64.zip
+          
+          # Xray ARM64
+          wget https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-arm64-v8a.zip
+          unzip -o Xray-linux-arm64-v8a.zip xray
+          
+          # Cloudflared ARM64
+          wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64 -O cloudflared
+          chmod +x cloudflared
+          
+          # Sing-box ARM64
+          wget https://github.com/SagerNet/sing-box/releases/latest/download/sing-box-1.10.1-linux-arm64.tar.gz
+          tar xzf sing-box-1.10.1-linux-arm64.tar.gz
+          mv sing-box-*/sing-box ./sing-box
+          chmod +x sing-box
+          
+          echo "ARM64 文件列表："
+          ls -lh
+          cd ..
+      
+      - name: UPX 压缩 AMD64
+        run: |
+          cd amd64
+          echo "压缩 AMD64 文件..."
+          upx -9 nezha-agent -o swith
+          upx -9 xray -o web
+          upx -9 cloudflared -o bot
+          upx -9 sing-box -o sbx
+          cd ..
+
+      - name: UPX 压缩 ARM64
+        run: |
+          cd arm64
+          echo "压缩 ARM64 文件..."
+          upx -9 nezha-agent -o swith
+          upx -9 xray -o web
+          upx -9 cloudflared -o bot
+          upx -9 sing-box -o sbx
+          cd ..
+
+      - name: 检查压缩后的文件
+        run: |
+          echo "检查压缩后的文件大小："
+          ls -lh amd64/swith amd64/web amd64/bot amd64/sbx || echo "AMD64 文件不存在"
+          ls -lh arm64/swith arm64/web arm64/bot arm64/sbx || echo "ARM64 文件不存在"
+          
+          # 检查文件大小是否合理
+          for file in amd64/swith amd64/web amd64/bot amd64/sbx arm64/swith arm64/web arm64/bot arm64/sbx; do
+            if [ -f "$file" ]; then
+              size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file")
+              if [ "$size" -lt 5000000 ]; then  # 小于5MB
+                echo "错误：$file 文件大小异常 ($size bytes)"
+                exit 1
+              fi
+            fi
+          done
+
+      - name: 发布 AMD64 版本
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: amd64
+          name: amd64
+          files: |
+            amd64/swith
+            amd64/web
+            amd64/bot
+            amd64/sbx
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: false
+          allow_updates: true
+
+      - name: 发布 ARM64 版本
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: arm64
+          name: arm64
+          files: |
+            arm64/swith
+            arm64/web
+            arm64/bot
+            arm64/sbx
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: false
+          allow_updates: true
