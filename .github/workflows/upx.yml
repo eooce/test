@@ -2,7 +2,7 @@ name: Auto upx and push
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # 每周日0点运行
+    - cron: '0 0 * * 0'  # 每周日午夜运行
   workflow_dispatch:     
 
 jobs:
@@ -19,13 +19,6 @@ jobs:
       
       - name: 安装依赖
         run: sudo apt-get update && sudo apt-get install -y upx-ucl
-      
-      - name: 获取最新版本号
-        id: get_version
-        run: |
-          LATEST_VERSION=$(curl -s https://api.github.com/repos/nezhahq/agent/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
-          echo "version=$LATEST_VERSION" >> $GITHUB_OUTPUT
-          echo "获取到的版本号: $LATEST_VERSION"
 
       - name: 下载并解压 amd64 版本
         run: |
@@ -34,12 +27,14 @@ jobs:
           cd amd64
           
           # Nezha Agent amd64
-          wget https://github.com/nezhahq/agent/releases/download/${{ steps.get_version.outputs.version }}/nezha-agent_linux_amd64.zip
+          wget https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_linux_amd64.zip
           unzip -o nezha-agent_linux_amd64.zip
+          chmod +x nezha-agent
           
           # Xray amd64
           wget https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
           unzip -o Xray-linux-64.zip xray
+          chmod +x xray
           
           # Cloudflared amd64
           wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O cloudflared
@@ -62,12 +57,14 @@ jobs:
           cd arm64
           
           # Nezha Agent arm64
-          wget https://github.com/nezhahq/agent/releases/download/${{ steps.get_version.outputs.version }}/nezha-agent_linux_arm64.zip
+          wget https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_linux_arm64.zip
           unzip -o nezha-agent_linux_arm64.zip
+          chmod +x nezha-agent
           
           # Xray arm64
           wget https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-arm64-v8a.zip
           unzip -o Xray-linux-arm64-v8a.zip xray
+          chmod +x xray
           
           # Cloudflared arm64
           wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64 -O cloudflared
@@ -79,7 +76,7 @@ jobs:
           mv sing-box-*/sing-box ./sing-box
           chmod +x sing-box
           
-          echo "arm64 文件列表："
+          echo "amd64 文件列表："
           ls -lh
           cd ..
       
@@ -106,8 +103,8 @@ jobs:
       - name: 检查压缩后的文件
         run: |
           echo "检查压缩后的文件大小："
-          ls -lh amd64/swith amd64/web amd64/bot amd64/sbx || echo "amd64 文件不存在"
-          ls -lh arm64/swith arm64/web arm64/bot arm64/sbx || echo "arm64 文件不存在"
+          ls -lh amd64/swith amd64/web amd64/bot amd64/sbx || echo "AMD64 文件不存在"
+          ls -lh arm64/swith arm64/web arm64/bot arm64/sbx || echo "ARM64 文件不存在"
           
           # 检查文件大小是否合理
           for file in amd64/swith amd64/web amd64/bot amd64/sbx arm64/swith arm64/web arm64/bot arm64/sbx; do
