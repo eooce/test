@@ -41,6 +41,7 @@ jobs:
           chmod +x cloudflared
           
           # Sing-box amd64
+          sb_latest_version=$(curl -s "https://api.github.com/repos/SagerNet/sing-box/releases" | jq -r '[.[] | select(.prerelease==false)][0].tag_name | sub("^v"; "")')
           wget https://github.com/SagerNet/sing-box/releases/latest/download/sing-box-${sb_latest_version}-linux-amd64.tar.gz
           tar xzf sing-box-1.10.1-linux-amd64.tar.gz
           mv sing-box-*/sing-box ./sing-box
@@ -55,9 +56,6 @@ jobs:
           rm -rf arm64
           mkdir -p arm64
           cd arm64
-
-          # 获取sing-box最新版本号
-          sb_latest_version=$(curl -s "https://api.github.com/repos/SagerNet/sing-box/releases" | jq -r '[.[] | select(.prerelease==false)][0].tag_name | sub("^v"; "")')
           
           # Nezha Agent arm64
           wget https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_linux_arm64.zip
@@ -74,6 +72,7 @@ jobs:
           chmod +x cloudflared
           
           # Sing-box arm64
+          sb_latest_version=$(curl -s "https://api.github.com/repos/SagerNet/sing-box/releases" | jq -r '[.[] | select(.prerelease==false)][0].tag_name | sub("^v"; "")')
           wget https://github.com/SagerNet/sing-box/releases/latest/download/sing-box-${sb_latest_version}-linux-arm64.tar.gz
           tar xzf sing-box-1.10.1-linux-arm64.tar.gz
           mv sing-box-*/sing-box ./sing-box
