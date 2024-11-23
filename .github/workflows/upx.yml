@@ -12,15 +12,15 @@ jobs:
       contents: write
     
     steps:
-      - name: 检查代码
+      - name: check script
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
       
-      - name: 安装依赖
+      - name: install dependencies
         run: sudo apt-get update && sudo apt-get install -y jq upx-ucl
 
-      - name: 下载并解压 amd64 版本
+      - name: Download and unzip the amd64 version
         run: |
           rm -rf amd64
           mkdir -p amd64
@@ -43,15 +43,15 @@ jobs:
           # Sing-box amd64
           sb_latest_version=$(curl -s "https://api.github.com/repos/SagerNet/sing-box/releases" | jq -r '[.[] | select(.prerelease==false)][0].tag_name | sub("^v"; "")')
           wget https://github.com/SagerNet/sing-box/releases/latest/download/sing-box-${sb_latest_version}-linux-amd64.tar.gz
-          tar xzf sing-box-1.10.1-linux-amd64.tar.gz
+          tar xzf sing-box-${sb_latest_version}-linux-amd64.tar.gz
           mv sing-box-*/sing-box ./sing-box
           chmod +x sing-box
           
-          echo "amd64 文件列表："
+          echo "amd64 files list："
           ls -lh
           cd ..
       
-      - name: 下载并解压 arm64 版本
+      - name: Download and unzip the arm64 version
         run: |
           rm -rf arm64
           mkdir -p arm64
@@ -74,52 +74,51 @@ jobs:
           # Sing-box arm64
           sb_latest_version=$(curl -s "https://api.github.com/repos/SagerNet/sing-box/releases" | jq -r '[.[] | select(.prerelease==false)][0].tag_name | sub("^v"; "")')
           wget https://github.com/SagerNet/sing-box/releases/latest/download/sing-box-${sb_latest_version}-linux-arm64.tar.gz
-          tar xzf sing-box-1.10.1-linux-arm64.tar.gz
+          tar xzf sing-box-${sb_latest_version}-linux-arm64.tar.gz
           mv sing-box-*/sing-box ./sing-box
           chmod +x sing-box
           
-          echo "amd64 文件列表："
+          echo "amd64 files list："
           ls -lh
           cd ..
       
-      - name: upx 压缩 amd64
+      - name: upx compress amd64
         run: |
           cd amd64
-          echo "压缩 amd64 文件..."
+          echo "compressing amd64 files..."
           upx -9 nezha-agent -o swith
           upx -9 xray -o web
           upx -9 cloudflared -o bot
           upx -9 sing-box -o sbx
           cd ..
 
-      - name: upx 压缩 arm64
+      - name: upx compress arm64
         run: |
           cd arm64
-          echo "压缩 arm64 文件..."
+          echo "compressing arm64 files..."
           upx -9 nezha-agent -o swith
           upx -9 xray -o web
           upx -9 cloudflared -o bot
           upx -9 sing-box -o sbx
           cd ..
 
-      - name: 检查压缩后的文件
+      - name: checking compressed files
         run: |
-          echo "检查压缩后的文件大小："
+          echo "Checking compressed files size："
           ls -lh amd64/swith amd64/web amd64/bot amd64/sbx || echo "AMD64 文件不存在"
           ls -lh arm64/swith arm64/web arm64/bot arm64/sbx || echo "ARM64 文件不存在"
           
-          # 检查文件大小是否合理
           for file in amd64/swith amd64/web amd64/bot amd64/sbx arm64/swith arm64/web arm64/bot arm64/sbx; do
             if [ -f "$file" ]; then
               size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file")
               if [ "$size" -lt 5000000 ]; then  # 小于5MB
-                echo "错误：$file 文件大小异常 ($size bytes)"
+                echo "Error：$file File size anomalies ($size bytes)"
                 exit 1
               fi
             fi
           done
 
-      - name: 发布 amd64 版本
+      - name: uplod amd64 version
         uses: softprops/action-gh-release@v1
         with:
           tag_name: amd64
@@ -134,7 +133,7 @@ jobs:
           prerelease: false
           allow_updates: true
 
-      - name: 发布 arm64 版本
+      - name: uplod arm64 version
         uses: softprops/action-gh-release@v1
         with:
           tag_name: arm64
