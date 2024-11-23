@@ -118,7 +118,7 @@ jobs:
             fi
           done
 
-      - name: uplod amd64 version
+      - name: upload amd64 version
         uses: softprops/action-gh-release@v1
         with:
           tag_name: amd64
@@ -133,7 +133,7 @@ jobs:
           prerelease: false
           allow_updates: true
 
-      - name: uplod arm64 version
+      - name: upload arm64 version
         uses: softprops/action-gh-release@v1
         with:
           tag_name: arm64
