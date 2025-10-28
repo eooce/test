@@ -86,7 +86,7 @@ jobs:
         run: |
           cd amd64
           echo "compressing amd64 files..."
-          upx -9 nezha-agent -o swith
+          upx -9 nezha-agent -o v1
           upx -9 xray -o web
           upx -9 cloudflared -o bot
           upx -9 sing-box -o sbx
@@ -96,7 +96,7 @@ jobs:
         run: |
           cd arm64
           echo "compressing arm64 files..."
-          upx -9 nezha-agent -o swith
+          upx -9 nezha-agent -o v1
           upx -9 xray -o web
           upx -9 cloudflared -o bot
           upx -9 sing-box -o sbx
@@ -105,10 +105,10 @@ jobs:
       - name: checking compressed files
         run: |
           echo "Checking compressed files size："
-          ls -lh amd64/swith amd64/web amd64/bot amd64/sbx || echo "AMD64 文件不存在"
-          ls -lh arm64/swith arm64/web arm64/bot arm64/sbx || echo "ARM64 文件不存在"
+          ls -lh amd64/v1 amd64/web amd64/bot amd64/sbx || echo "AMD64 文件不存在"
+          ls -lh arm64/v1 arm64/web arm64/bot arm64/sbx || echo "ARM64 文件不存在"
           
-          for file in amd64/swith amd64/web amd64/bot amd64/sbx arm64/swith arm64/web arm64/bot arm64/sbx; do
+          for file in amd64/v1 amd64/web amd64/bot amd64/sbx arm64/v1 arm64/web arm64/bot arm64/sbx; do
             if [ -f "$file" ]; then
               size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file")
               if [ "$size" -lt 5000000 ]; then  # 小于5MB
@@ -124,7 +124,7 @@ jobs:
           tag_name: amd64
           name: amd64
           files: |
-            amd64/swith
+            amd64/v1
             amd64/web
             amd64/bot
             amd64/sbx
@@ -139,7 +139,7 @@ jobs:
           tag_name: arm64
           name: arm64
           files: |
-            arm64/swith
+            arm64/v1
             arm64/web
             arm64/bot
             arm64/sbx
